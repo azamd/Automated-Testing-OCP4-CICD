@@ -9,7 +9,7 @@ Here is the pipeline's full view in the following screenshots:
 ![Screenshot from 2023-08-15 12-31-13](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/605d58f9-2ce2-4fd1-a538-ed9317d8f990)
 ![Screenshot from 2023-08-15 12-31-40](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/880c29a7-c1ae-4195-b6f7-c45e0a1e9412)
 
-=> Tasks Description:
+# Tasks Description:
 
 1- git-clone: the starting task that links the application source code with the pipeline by cloning its Git remote repository.
 
