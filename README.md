@@ -16,6 +16,7 @@ Here is the pipeline's full view in the following screenshots:
 2- git-leaks: this task uses Gitleaks which is a SAST tool for detecting hard-coded secrets like passwords, API keys, and tokens in git repos.
 
 3- owasp-dependency-check: the main goal of this task is to use OWASP Dependency Check which is a Software Composition Analysis (SCA) tool that attempts to detect publicly disclosed vulnerabilities contained within a project’s dependencies.
+
 4- app-build: this task builds the application.
 
 5- checkstyle: this task detects code-formatting violations based on pre-specified code-formatting rules and standards. 
