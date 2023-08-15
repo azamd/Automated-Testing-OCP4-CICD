@@ -28,16 +28,32 @@ Here is the pipeline's full view in the following screenshots:
 8- sonarqube-analysis: this task launches a SonarQube testing process, SonarQube is an open-source platform for continuous inspection of code quality to perform automatic reviews with static analysis of code to detect bugs and code smells.
 
 9- checkov-scanner: this task uses Checkov which is a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages.
-Notice: Checkov in this case was used to detect Dockerfile misconfigurations.
+
+->Notice: Checkov in this case was used to detect Dockerfile misconfigurations.
 
 10- image-build-and-push: this task aims to build the application container image from a Dockerfile and push it to DockerHub.
-Notice: This Task builds source into a container image using Google's Kaniko tool, kaniko doesn't depend on a Docker daemon and executes each command within a Dockerfile completely in userspace. This enables building container images in environments that can't easily or securely run a Docker daemon, such as a standard Kubernetes cluster.
+
+->Notice: This Task builds source into a container image using Google's Kaniko tool, kaniko doesn't depend on a Docker daemon and executes each command within a Dockerfile completely in userspace. This enables building container images in environments that can't easily or securely run a Docker daemon, such as a standard Kubernetes cluster.
 
 11- grype-image-scan: this task aims to launch an automated container image scan to detect possible vulnerabilities, it uses Grype which is a vulnerability scanner for container images and filesystems.
 
 12- deploy: this cluster task uses OpenShift CLI to update the application's deployment by replacing the current application container image with the latest image pulled from DockerHub.
-Notice: there is a pre-deployed version of the application on the Red Hat Openshift Platform already (applicable manually using YAML files or with the assistance of OpenShift UI).
+
+->Notice: there is a pre-deployed version of the application on the Red Hat Openshift Platform already (applicable manually using YAML files or with the assistance of OpenShift UI).
 
 13- jmeter-load-testing: this task launches a series of pre-defined JMeter tests (HTTP requests) for analyzing and measuring the overall performance of the pre-deployed application.
 
 14- selenium-e2e-testing: this task uses Selenium to launch automated end-to-end tests on Google Chrome browser to evaluate the execution/user experience delivered by the application.
+
+IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as a workspaces, and its context (default: "."). 
+
+For a better understanding here's a detailed screenshot of task n°4:
+
+![Screenshot from 2023-08-15 14-27-29](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/dfde3525-a850-4ce9-9f47-37fbe5d65971)
+
+-> Notice the usage of maven goals: "clean" and "package" / -DskipTests: for skipping tests.
+
+![Screenshot from 2023-08-15 14-30-36](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/48121ede-8963-4c5d-81e9-7833e76994ea)
+
+-> Notice "." as the default value of The context directory within the repository for sources on which we want to execute maven goals.
+-> Notice the addition of the required workspaces: source and maven-settings (PVCs [PersistentVolumeClaim] are needed for your workspaces).
