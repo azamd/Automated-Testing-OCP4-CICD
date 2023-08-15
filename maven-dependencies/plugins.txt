@@ -1,0 +1,128 @@
+-----------------------MAVEN PLUGINS ADDED IN POM.XML------------------------------------
+PS: add these plugins in <build> section.
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+               <groupId>org.sonarsource.scanner.maven</groupId>
+               <artifactId>sonar-maven-plugin</artifactId>
+               <version>3.7.0.1746</version>
+                <executions>
+                  <execution>
+                      <goals>
+                          <goal>sonar</goal>
+                      </goals>
+                  </execution>
+              </executions>
+           </plugin>
+            <plugin>
+              <groupId>org.owasp</groupId>
+              <artifactId>dependency-check-maven</artifactId>
+              <version>8.3.0</version>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>check</goal>
+                      </goals>
+                  </execution>
+              </executions>
+            </plugin>
+            <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-checkstyle-plugin</artifactId>
+    <version>3.3.0</version>
+    <configuration>
+          <logViolationsToConsole>true</logViolationsToConsole>
+          <checkstyleRules>
+            <module name="Checker">
+ 
+              <!-- Checks for Size Violations.                    -->
+              <!-- See http://checkstyle.sf.net/config_sizes.html -->
+              <module name="FileLength">
+                <property name="max" value="3500" />
+                <property name="fileExtensions" value="java"/>
+              </module>
+ 
+              <!-- Checks for whitespace                               -->
+              <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+              <module name="FileTabCharacter"/>
+ 
+              <module name="TreeWalker">
+                <module name="StaticVariableName"/>
+                <module name="TypeName">
+                  <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$"/>
+                </module>
+              </module>
+            </module>
+          </checkstyleRules>
+        </configuration>
+    <executions>
+        <execution>
+            <id>verify-style</id>
+            <phase>process-classes</phase>
+            <goals>
+                <goal>check</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+         <!-- JMeter Maven Plugin for load testing-->
+        <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>2.9.0</version>
+                <executions>
+                    <!-- Generate JMeter configuration -->
+                    <execution>
+                        <id>configuration</id>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                    <!-- Run JMeter tests -->
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                    <!-- Fail build on errors in test -->
+                    <execution>
+                        <id>jmeter-check-results</id>
+                        <goals>
+                            <goal>results</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> 
+         <!-- JMeter Graph Maven Plugin for a graphical JMeter results visualization -->
+           
+           <plugin>
+        <groupId>de.codecentric</groupId>
+        <artifactId>jmeter-graph-maven-plugin</artifactId>
+        <version>0.1.0</version>
+        <executions>
+          <execution>
+            <id>create-graphs</id>
+            <goals>
+              <goal>create-graph</goal>
+            </goals>
+            <configuration>
+              <inputFile>${project.build.directory}/jmeter/results/cursos request.jtl</inputFile>
+              <graphs>
+                <graph>
+                  <pluginType>ThreadsStateOverTime</pluginType>
+                  <width>1000</width>
+                  <height>800</height>
+                  <outputFile>${project.build.directory}/jmeter/results/cursos request.png</outputFile>
+                </graph>
+                <!-- ... you can declare more <graph>-elements here -->
+              </graphs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+</plugins>

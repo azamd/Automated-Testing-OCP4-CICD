@@ -1,0 +1,37 @@
+----------------MAVEN DEPENDENCIES USED IN POM.XML--------------------------------------------- 
+
+     <!-- Selenium Maven Dependency -->
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-java</artifactId>
+          <version>3.141.59</version>
+       </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+       <dependency>
+         <groupId>io.github.bonigarcia</groupId>
+         <artifactId>webdrivermanager</artifactId>
+         <version>4.4.0</version>
+       </dependency>
+
+
+
+     <!-- JUnit 4 and Mockito dependencies for unit testing -->
+    <dependency>
+     <groupId>org.mockito</groupId>
+     <artifactId>mockito-core</artifactId>
+     <version>2.21.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
+   <dependency>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-actuator</artifactId>
+     <version>3.1.2</version>
+   </dependency>
+
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      <scope>runtime</scope>
+    </dependency>
