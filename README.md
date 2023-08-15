@@ -10,6 +10,7 @@ Here is the pipeline's full view in the following screenshots:
 ![Screenshot from 2023-08-15 12-31-40](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/880c29a7-c1ae-4195-b6f7-c45e0a1e9412)
 
 => Tasks Description:
+
 1- git-clone: the starting task that links the application source code with the pipeline by cloning its Git remote repository.
 
 2- git-leaks: this task uses Gitleaks which is a SAST tool for detecting hard-coded secrets like passwords, API keys, and tokens in git repos.
@@ -38,4 +39,4 @@ Notice: there is a pre-deployed version of the application on the Red Hat Opensh
 
 13- jmeter-load-testing: this task launches a series of pre-defined JMeter tests (HTTP requests) for analyzing and measuring the overall performance of the pre-deployed application.
 
-14-selenium-e2e-testing: this task uses Selenium to launch automated end-to-end tests on Google Chrome browser to evaluate the execution/user experience delivered by the application.
+14- selenium-e2e-testing: this task uses Selenium to launch automated end-to-end tests on Google Chrome browser to evaluate the execution/user experience delivered by the application.
