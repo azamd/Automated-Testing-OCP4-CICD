@@ -56,4 +56,5 @@ For a better understanding here's a detailed screenshot of task n°4:
 ![Screenshot from 2023-08-15 14-30-36](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/48121ede-8963-4c5d-81e9-7833e76994ea)
 
 -> Notice "." as the default value of The context directory within the repository for sources on which we want to execute maven goals.
+
 -> Notice the addition of the required workspaces: source and maven-settings (PVCs [PersistentVolumeClaim] are needed for your workspaces).
