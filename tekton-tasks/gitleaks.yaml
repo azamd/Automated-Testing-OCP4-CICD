@@ -1,0 +1,73 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: gitleaks
+spec:
+  description: >-
+    This task makes it possible to use Gitleaks within your Tekton pipelines.
+    Gitleaks is a SAST tool for detecting hardcoded secrets like passwords, api
+    keys, and tokens in git repos. It is an easy-to-use, all-in-one solution for
+    finding secrets, past or present, in your code.
+  params:
+    - description: path to the repo to be scanned.
+      name: repo_path
+      type: string
+    - default: ''
+      description: url from where the config file would be fetched.
+      name: config_file_url
+      type: string
+    - default: ''
+      description: path to config file.
+      name: config_file_path
+      type: string
+    - default: json
+      description: >-
+        format in which report will be generated. (json|csv|sarif)
+        (default:"json")
+      name: output_format
+      type: string
+    - description: path of file to save analysis report
+      name: report_output_path
+      type: string
+    - default: []
+      description: args
+      name: args
+      type: array
+  steps:
+    - image: 'registry.access.redhat.com/ubi8/ubi-minimal:8.2'
+      name: fetch-config-file
+      resources: {}
+      script: |
+        #!/usr/bin/env bash
+
+        if [ -n "$(params.config_file_url)" ]
+        then
+         curl "$(params.config_file_url)" --output "$(params.config_file_path)"
+         echo "Fetched the config file from given ($(params.config_file_url)) URL and successfully saved at $(workspaces.source.path)/$(params.config_file_path)"
+        else
+         echo "No config file url was set"
+        fi
+      workingDir: $(workspaces.source.path)
+    - args:
+        - $(params.args)
+      image: 'docker.io/nextail/gitleaks:latest'
+      name: detect-secret
+      resources: {}
+      script: |
+        #!/bin/bash
+
+         gitleaks detect --report-path="$(params.repo_path)" --config="$(params.config_file_path)" --report-format="$(params.output_format)"
+
+        EXIT_CODE="$?"
+        if [ "$EXIT_CODE" -eq 0 ]
+        then
+         echo "No leaks found"
+         exit $EXIT_CODE
+        else
+         echo "============= Leaks found in code. Check generated report at $(params.report_output_path) ==============="
+         exit $EXIT_CODE
+        fi
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - description: A workspace that contains fetched git repo.
+      name: source

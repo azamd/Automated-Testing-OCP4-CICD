@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: grype
+spec:
+  description: >-
+    A vulnerability scanner for container images and filesystems. Works with
+    Syft, the powerful SBOM (software bill of materials) tool for container
+    images and filesystems.
+  params:
+    - description: The Arguments to be passed to Grype command.
+      name: ARGS
+      type: array
+    - default: >-
+        docker.io/anchore/grype@sha256:40c41e43eff0eb979375ea705f0cf5f6f698941099f63c890c3eb90b6ef72db5
+      description: Grype image to be used
+      name: GRYPE_IMAGE
+      type: string
+  steps:
+    - args:
+        - $(params.ARGS)
+      image: $(params.GRYPE_IMAGE)
+      name: grype
+      resources: {}
+      workingDir: $(workspaces.source-dir.path)
+  workspaces:
+    - name: source-dir
+      optional: true

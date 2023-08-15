@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  managedFields:
+  name: checkov-dockerfile-scanner
+spec:
+  params:
+    - description: path to the repo to be scanned.
+      name: repo_path
+      type: string
+    - default: .
+      description: The context directory within the repository.
+      name: CONTEXT_DIR
+      type: string
+  steps:
+    - image: 'docker.io/bridgecrew/checkov:latest'
+      name: checkov-dockerfile-config-scanning
+      resources: {}
+      script: |
+        #!/bin/bash
+         echo $(workspaces.source.path)/$(params.CONTEXT_DIR)
+         checkov -d $(workspaces.source.path)/$(params.CONTEXT_DIR) --framework dockerfile
+
+        EXIT_CODE="$?"
+
+        if [ "$EXIT_CODE" -eq 0 ]
+
+        then
+         echo "Dockerfile is well-configured, no vulnerabilities reported."
+         exit $EXIT_CODE
+        else
+         echo "Vulnerabilities found, check out Checkov scan report for more details."
+         exit $EXIT_CODE
+        fi
+
+        workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
+  workspaces:
+    - description: A workspace that contains the project repo.
+      name: source
