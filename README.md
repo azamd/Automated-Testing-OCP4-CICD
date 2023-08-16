@@ -3,7 +3,7 @@ This project is an implementation of a Tekton CI/CD pipeline on Red Hat OpenShif
 
 The following screenshot shows our web application's home page.
 
-Ez-Learning Git repo: https://github.com/azamd/ez-learning 
+Ez-Learning Git repo: https://github.com/donnatto/ez-learning
 
 ![image](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/1a47bd13-45d1-4823-a59d-cb255373157a)
 
