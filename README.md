@@ -1,10 +1,11 @@
-# Automated-Testing-OCP4-CICD
+# OCP4-CICD
 This project is an implementation of a Tekton CI/CD pipeline on Red Hat OpenShift 4, the main goal of this pipeline is to automate a series of static and dynamic tests over an e-learning web application made using Java 8 and Spring Boot.
 
 The following screenshot shows our web application's home page.
-Ez-Learning Git repo: https://github.com/azamd/ez-learning 
-![Screenshot from 2023-04-30 20-41-09](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/e0dc9147-8c54-4d26-946d-ee2c4943d4ef)
 
+Ez-Learning Git repo: https://github.com/azamd/ez-learning 
+
+![image](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/1a47bd13-45d1-4823-a59d-cb255373157a)
 
 Each task is a well-defined type of test, either Static or Dynamic, customized tasks and cluster tasks were used in the making of this CI/CD pipeline.
 the main cluster task implemented in this pipeline is Maven Cluster Task provided by Red Hat OpenShift 4 Pipeline Builder UI, regarding that the addressed application is developed using Java 8 and Spring Boot as well as Maven as the project management tool.
