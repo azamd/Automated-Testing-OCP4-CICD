@@ -23,7 +23,8 @@ Here is the pipeline's full view in the following screenshots:
 
 - Red Hat OpenShift 4: the main platform where I've implemented the CI/CD pipeline and deployed the application.
 - Tekton: a powerful yet flexible Kubernetes-native open-source framework for creating continuous integration and delivery (CI/CD) systems, OCP4 uses Tekton to build CI/CD pipelines.
-- JUnit and Mockito: both tools were used for unit tests.
+- JUnit: an open-source testing framework for Java programming language that provides a standardized way to write and execute unit tests.
+- Mockito: an open-source Java framework used for creating and working with mock objects in unit testing.
 - Gitleaks: a SAST tool for scanning Git repositories, it detects hardcoded secrets like passwords, API keys, and tokens.
 - OWASP-Dependency-Check: an SCA tool that detects vulnerabilities within a project's dependencies.
 - Checkstyle: an open-source static code analysis tool that ensures that Java code adheres to a set of coding standards and guidelines.
