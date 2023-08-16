@@ -12,11 +12,6 @@ I've forked the previous Git repo to be able to add the necessary updates like m
 Each task is a well-defined type of test, either Static or Dynamic, customized tasks and cluster tasks were used in the making of this CI/CD pipeline.
 the main cluster task implemented in this pipeline is Maven Cluster Task provided by Red Hat OpenShift 4 Pipeline Builder UI, regarding that the addressed application is developed using Java 8 and Spring Boot as well as Maven as the project management tool.
 
-Here is the pipeline's full view in the following screenshots:
-
-![Screenshot from 2023-08-15 12-31-13](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/605d58f9-2ce2-4fd1-a538-ed9317d8f990)
-![Screenshot from 2023-08-15 12-31-40](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/880c29a7-c1ae-4195-b6f7-c45e0a1e9412)
-
 # Used technologies/tools:
 
 ![Screenshot from 2023-08-16 11-21-19](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/5f0d73da-f018-477a-b907-c3eeb331487a)
@@ -36,7 +31,13 @@ Here is the pipeline's full view in the following screenshots:
 - JMeter: an open-source performance testing tool, primarily used for load testing, performance testing, and functional testing of web apps, web services, databases, and other software systems.
 - Selenium WebDriver: a powerful tool for automating web interactions and testing, making it easier to ensure the quality and functionality of web applications across different browsers and platforms.
   
-# Tasks Description:
+# Pipeline Description:
+- Pipeline overview:
+
+![Screenshot from 2023-08-15 12-31-13](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/605d58f9-2ce2-4fd1-a538-ed9317d8f990)
+![Screenshot from 2023-08-15 12-31-40](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/880c29a7-c1ae-4195-b6f7-c45e0a1e9412)
+
+- In the following section, I elaborate a comprehensive explanation of each task:
 
 1- git-clone: the starting task that links the application source code with the pipeline by cloning its Git remote repository.
 
