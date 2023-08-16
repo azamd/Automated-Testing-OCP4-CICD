@@ -1,6 +1,11 @@
 # Automated-Testing-OCP4-CICD
 This project is an implementation of a Tekton CI/CD pipeline on Red Hat OpenShift 4, the main goal of this pipeline is to automate a series of static and dynamic tests over an e-learning web application made using Java 8 and Spring Boot.
 
+The following screenshot shows our web application's home page.
+Ez-Learning Git repo: https://github.com/azamd/ez-learning 
+![Screenshot from 2023-04-30 20-41-09](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/e0dc9147-8c54-4d26-946d-ee2c4943d4ef)
+
+
 Each task is a well-defined type of test, either Static or Dynamic, customized tasks and cluster tasks were used in the making of this CI/CD pipeline.
 the main cluster task implemented in this pipeline is Maven Cluster Task provided by Red Hat OpenShift 4 Pipeline Builder UI, regarding that the addressed application is developed using Java 8 and Spring Boot as well as Maven as the project management tool.
 
@@ -45,7 +50,7 @@ Here is the pipeline's full view in the following screenshots:
 
 14- selenium-e2e-testing: this task uses Selenium to launch automated end-to-end tests on Google Chrome browser to evaluate the execution/user experience delivered by the application.
 
-IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as a workspaces, and its context (default: "."). 
+IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as workspaces, and its context (default: "."). 
 
 For a better understanding here's a detailed screenshot of task n°4:
 
