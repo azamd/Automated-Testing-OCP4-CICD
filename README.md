@@ -1,4 +1,4 @@
-# OCP4-CICD
+# OCP4-TEKTON-CICD
 This project is an implementation of a Tekton CI/CD pipeline on Red Hat OpenShift 4, the main goal of this pipeline is to automate a series of static and dynamic tests over an e-learning web application made using Java 8 and Spring Boot.
 
 The following screenshot shows our web application's home page.
