@@ -19,6 +19,8 @@ Here is the pipeline's full view in the following screenshots:
 
 # Used technologies/tools:
 
+![Screenshot from 2023-08-16 11-21-19](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/5f0d73da-f018-477a-b907-c3eeb331487a)
+
 - Red Hat OpenShift 4: the main platform where I've implemented the CI/CD pipeline and deployed the application.
 - Tekton: a powerful yet flexible Kubernetes-native open-source framework for creating continuous integration and delivery (CI/CD) systems, OCP4 uses Tekton to build CI/CD pipelines.
 - JUnit and Mockito: both tools were used for unit tests.
