@@ -7,6 +7,8 @@ Ez-Learning Git repo: https://github.com/donnatto/ez-learning
 
 ![image](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/1a47bd13-45d1-4823-a59d-cb255373157a)
 
+I've forked the previous Git repo to be able to add the necessary updates like maven dependencies/plugins, unit tests, and selenium E2E tests.
+
 Each task is a well-defined type of test, either Static or Dynamic, customized tasks and cluster tasks were used in the making of this CI/CD pipeline.
 the main cluster task implemented in this pipeline is Maven Cluster Task provided by Red Hat OpenShift 4 Pipeline Builder UI, regarding that the addressed application is developed using Java 8 and Spring Boot as well as Maven as the project management tool.
 
