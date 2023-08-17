@@ -12,7 +12,7 @@ I've forked the previous Git repo to be able to add the necessary updates like m
 Each task is a well-defined type of test, either Static or Dynamic, customized tasks and cluster tasks were used in the making of this CI/CD pipeline.
 the main cluster task implemented in this pipeline is Maven Cluster Task provided by Red Hat OpenShift 4 Pipeline Builder UI, regarding that the addressed application is developed using Java 8 and Spring Boot as well as Maven as the project management tool.
 
-# Used technologies/tools:
+# Used technologies and tools:
 
 ![Screenshot from 2023-08-16 11-21-19](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/5f0d73da-f018-477a-b907-c3eeb331487a)
 
