@@ -1,0 +1,8 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: docker-creds
+data:
+  .dockerconfigjson: >-
+    eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJhbWRheml6IiwicGFzc3dvcmQiOiJheml6LmRvY2tlciIsImVtYWlsIjoibW9oYW1lZGF6aXouYW1kb3VuaTk5QGdtYWlsLmNvbSIsImF1dGgiOiJZVzFrWVhwcGVqcGhlbWw2TG1SdlkydGxjZz09In19fQ==
+type: kubernetes.io/dockerconfigjson
