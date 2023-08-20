@@ -63,6 +63,10 @@ the main cluster task implemented in this pipeline is Maven Cluster Task provide
 
 ->Notice: This Task builds source into a container image using Google's Kaniko tool, kaniko doesn't depend on a Docker daemon and executes each command within a Dockerfile completely in userspace. This enables building container images in environments that can't easily or securely run a Docker daemon, such as a standard Kubernetes cluster.
 
+Hint: The configuration of DockerHub credentials is possible through a secret YAML file that you can link with the image-build-and-push task as a workspace in order to be able to push the application image to DockerHub, you can simply type the following oc command on the OpenShift command line terminal: oc create secret docker-registry docker-config --docker-server=https://index.docker.io/v1/ --docker-username=<your-username> --docker-password=<your-password> --docker-email=<your-email> 
+
+PS: "docker-config" is the name of the secret that I've chosen you can pick your own secret name.
+
 11- grype-image-scan: this task aims to launch an automated container image scan to detect possible vulnerabilities, it uses Grype which is a vulnerability scanner for container images and filesystems.
 
 12- deploy: this cluster task uses OpenShift CLI to update the application's deployment by replacing the current application container image with the latest image pulled from DockerHub.
