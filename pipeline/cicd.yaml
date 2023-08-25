@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: ci-cd
+  namespace: amd-med-aziz-dev
 spec:
   tasks:
     - name: git-clone
@@ -166,9 +167,7 @@ spec:
     - name: deploy
       params:
         - name: SCRIPT
-          value: >-
-            oc set image deployment/ez-learning-git
-            ez-learning-git=docker.io/amdaziz/ez-learning:latest
+          value: oc start-build bc/ez-learning-git
         - name: VERSION
           value: latest
       runAfter:
@@ -251,7 +250,7 @@ spec:
             image-registry.openshift-image-registry.svc:5000/openshift/java:latest
         - name: GOALS
           value:
-            - package
+            - test
         - name: MAVEN_MIRROR_URL
           value: ''
         - name: SERVER_USER
@@ -416,46 +415,7 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - deploy
-      taskRef:
-        kind: ClusterTask
-        name: maven
-      workspaces:
-        - name: source
-          workspace: source
-        - name: maven-settings
-          workspace: maven-settings
-    - name: selenium-e2e-testing
-      params:
-        - name: MAVEN_IMAGE
-          value: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
-        - name: GOALS
-          value:
-            - test
-            - '-Dtest="E2eTestAutomation.java"'
-        - name: MAVEN_MIRROR_URL
-          value: ''
-        - name: SERVER_USER
-          value: ''
-        - name: SERVER_PASSWORD
-          value: ''
-        - name: PROXY_USER
-          value: ''
-        - name: PROXY_PASSWORD
-          value: ''
-        - name: PROXY_PORT
-          value: ''
-        - name: PROXY_HOST
-          value: ''
-        - name: PROXY_NON_PROXY_HOSTS
-          value: ''
-        - name: PROXY_PROTOCOL
-          value: http
-        - name: CONTEXT_DIR
-          value: .
-      runAfter:
-        - jmeter-load-testing
+        - selenium-e2e-testing
       taskRef:
         kind: ClusterTask
         name: maven
@@ -487,6 +447,45 @@ spec:
           workspace: source
         - name: dockerconfig
           workspace: docker-config
+    - name: selenium-e2e-testing
+      params:
+        - name: MAVEN_IMAGE
+          value: >-
+            registry.redhat.io/ubi8/openjdk-17@sha256:923b18a62d892ec23b6bbf714ecb237a0a0fa3cd225fbf89d39966dd8d421c72
+        - name: GOALS
+          value:
+            - test
+            - '-Dtest="E2eAutomatedTest"'
+        - name: MAVEN_MIRROR_URL
+          value: ''
+        - name: SERVER_USER
+          value: ''
+        - name: SERVER_PASSWORD
+          value: ''
+        - name: PROXY_USER
+          value: ''
+        - name: PROXY_PASSWORD
+          value: ''
+        - name: PROXY_PORT
+          value: ''
+        - name: PROXY_HOST
+          value: ''
+        - name: PROXY_NON_PROXY_HOSTS
+          value: ''
+        - name: PROXY_PROTOCOL
+          value: http
+        - name: CONTEXT_DIR
+          value: .
+      runAfter:
+        - deploy
+      taskRef:
+        kind: ClusterTask
+        name: maven
+      workspaces:
+        - name: source
+          workspace: source
+        - name: maven-settings
+          workspace: maven-settings
   workspaces:
     - name: source
     - name: maven-settings
