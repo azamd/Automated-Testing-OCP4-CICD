@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  creationTimestamp: '2023-08-31T11:46:32Z'
+  generation: 6
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:params': {}
+          'f:steps': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-08-31T14:17:12Z'
+  name: semgrep-analysis
+  namespace: amd-med-aziz-dev
+  resourceVersion: '3000012656'
+  uid: 48f3169a-9862-4f7f-bf20-be035ba1abdc
+spec:
+  params:
+    - description: path to the repo to be scanned.
+      name: repo_path
+      type: string
+    - default: .
+      description: The context directory within the repository.
+      name: CONTEXT_DIR
+      type: string
+    - description: Semgrep App Token
+      name: semgrep_cloud_token
+      type: string
+  steps:
+    - env:
+        - name: SEMGREP_APP_TOKEN
+          value: $(params.semgrep_cloud_token)
+      image: 'docker.io/kondukto/semgrep:latest'
+      name: semgrep-analysis-process
+      resources: {}
+      script: |
+        #!/bin/bash
+        cd $(workspaces.source.path)/$(params.CONTEXT_DIR)
+        export SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN
+        semgrep ci
+        EXIT_CODE="$?"
+        echo $EXIT_CODE
+        if [ "$EXIT_CODE" -eq 0 ]
+        then
+         echo "check semgrep full analysis report on Semgrep Cloud Platform."
+         exit $EXIT_CODE
+        fi
+      workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
+  workspaces:
+    - description: A workspace that contains fetched git repo.
+      name: source

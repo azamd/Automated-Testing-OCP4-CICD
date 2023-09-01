@@ -2,12 +2,33 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: ez-learning-env-cm
+  namespace: amd-med-aziz-dev
+  uid: a4fbffae-3a1b-413d-8c4e-ed276188d867
+  resourceVersion: '2989351515'
+  creationTimestamp: '2023-08-20T11:31:24Z'
+  managedFields:
+    - manager: Mozilla
+      operation: Update
+      apiVersion: v1
+      time: '2023-08-28T11:00:35Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:data':
+          .: {}
+          'f:APP_PROFILE': {}
+          'f:MYSQL_DATABASE': {}
+          'f:MYSQL_HOST': {}
+          'f:MYSQL_PASSWORD': {}
+          'f:MYSQL_PORT_NUMBER': {}
+          'f:MYSQL_ROOT_PASSWORD': {}
+          'f:MYSQL_USER': {}
+        'f:immutable': {}
 immutable: false
 data:
   APP_PROFILE: dev
   MYSQL_DATABASE: sampledb
-  MYSQL_HOST: mysql
-  MYSQL_PASSWORD: nFoFBNswlfyyleBG
+  MYSQL_HOST: mariadb
+  MYSQL_PASSWORD: 1PxBIR2V4M15d8x37
   MYSQL_PORT_NUMBER: '3306'
-  MYSQL_ROOT_PASSWORD: nFoFBNswlfyyleBG
-  MYSQL_USER: root
+  MYSQL_ROOT_PASSWORD: vdrYMMTAQDglVuOSK
+  MYSQL_USER: AmdMedAziz

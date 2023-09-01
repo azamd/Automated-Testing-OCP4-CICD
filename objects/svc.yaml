@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ez-learning-git
+  namespace: amd-med-aziz-dev
+spec:
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: ez-learning-git
+    deployment: ez-learning-git
+status:
+  loadBalancer: {}

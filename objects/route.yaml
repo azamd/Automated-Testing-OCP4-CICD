@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: ez-learning-git
+  namespace: amd-med-aziz-dev
+spec:
+  host: ez-learning-git-amd-med-aziz-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com
+  to:
+    kind: Service
+    name: ez-learning-git
+  port:
+    targetPort: 8080-tcp

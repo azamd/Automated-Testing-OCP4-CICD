@@ -1,0 +1,55 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  creationTimestamp: '2023-08-29T10:31:56Z'
+  generation: 1
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:params': {}
+          'f:steps': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-08-29T10:31:56Z'
+  name: checkov-kubernetes-scanner
+  namespace: amd-med-aziz-dev
+  resourceVersion: '2992704972'
+  uid: bf5ee4c9-46cc-4569-a830-8bbd9b6aea23
+spec:
+  params:
+    - description: path to the repo to be scanned.
+      name: repo_path
+      type: string
+    - default: .
+      description: The context directory within the repository.
+      name: CONTEXT_DIR
+      type: string
+  steps:
+    - image: 'docker.io/bridgecrew/checkov:latest'
+      name: checkov-kubernetes-config-scanning
+      resources: {}
+      script: |
+        #!/bin/bash
+         echo $(workspaces.source.path)/$(params.CONTEXT_DIR)
+         checkov -d $(workspaces.source.path)/$(params.CONTEXT_DIR) --framework kubernetes
+
+        EXIT_CODE="$?"
+
+        if [ "$EXIT_CODE" -eq 0 ]
+
+        then
+         echo "Kubernetes manifest files are well-configured, no violations found."
+         exit $EXIT_CODE
+        else
+         echo "Vulnerabilities found, check out Checkov scan report for more details."
+         exit $EXIT_CODE
+        fi
+
+        workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
+  workspaces:
+    - description: A workspace that contains the project repo.
+      name: source

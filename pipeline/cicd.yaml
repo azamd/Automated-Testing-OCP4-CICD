@@ -1,11 +1,29 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
+  creationTimestamp: '2023-08-20T11:26:45Z'
+  generation: 27
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:finally': {}
+          'f:params': {}
+          'f:resources': {}
+          'f:tasks': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-09-01T10:47:03Z'
   name: ci-cd
   namespace: amd-med-aziz-dev
+  resourceVersion: '3002904259'
+  uid: 2b5f8420-c9d6-457a-a4a9-f1bf5a0d2f45
 spec:
   tasks:
-    - name: git-clone
+    - name: git-checkout
       params:
         - name: url
           value: 'https://github.com/azamd/ez-learning.git'
@@ -86,7 +104,7 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
-    - name: pmd-reporting
+    - name: pmd-program-mistake-detector
       params:
         - name: MAVEN_IMAGE
           value: >-
@@ -125,7 +143,7 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
-    - name: cpd-reporting
+    - name: cpd-copy-paste-detector
       params:
         - name: MAVEN_IMAGE
           value: >-
@@ -164,18 +182,18 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
-    - name: deploy
+    - name: deploy-on-ocp
       params:
         - name: SCRIPT
           value: oc start-build bc/ez-learning-git
         - name: VERSION
           value: latest
       runAfter:
-        - grype-image-scan
+        - grype-image-scanner
       taskRef:
         kind: ClusterTask
         name: openshift-client
-    - name: grype-image-scan
+    - name: grype-image-scanner
       params:
         - name: ARGS
           value:
@@ -190,20 +208,6 @@ spec:
         name: grype
       workspaces:
         - name: source-dir
-          workspace: source
-    - name: checkov-scanner
-      params:
-        - name: repo_path
-          value: ez-learning
-        - name: CONTEXT_DIR
-          value: .
-      runAfter:
-        - sonarqube-analysis
-      taskRef:
-        kind: Task
-        name: checkov-dockerfile-scanner
-      workspaces:
-        - name: source
           workspace: source
     - name: checkstyle
       params:
@@ -319,19 +323,76 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
+    - name: gitleaks
+      params:
+        - name: repo_path
+          value: ez-learning
+        - name: config_file_url
+          value: >-
+            https://github.com/azamd/ez-learning/blob/master/gitleaks/.pre-commit-config.yaml
+        - name: config_file_path
+          value: gitleaks/.pre-commit-config.yaml
+        - name: output_format
+          value: json
+        - name: report_output_path
+          value: ez-learning/gitleaks/gitleaks-reports.json
+        - name: args
+          value: []
+      runAfter:
+        - git-checkout
+      taskRef:
+        kind: Task
+        name: git-leaks
+      workspaces:
+        - name: source
+          workspace: source
+    - name: image-build-and-push
+      params:
+        - name: IMAGE
+          value: 'amdaziz/ez-learning:latest'
+        - name: BUILDER_IMAGE
+          value: >-
+            registry.redhat.io/rhel8/buildah@sha256:00795fafdab9bbaa22cd29d1faa1a01e604e4884a2c935c1bf8e3d1f0ad1c084
+        - name: STORAGE_DRIVER
+          value: vfs
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: .
+        - name: TLSVERIFY
+          value: 'false'
+        - name: FORMAT
+          value: docker
+        - name: BUILD_EXTRA_ARGS
+          value: ''
+        - name: PUSH_EXTRA_ARGS
+          value: ''
+        - name: SKIP_PUSH
+          value: 'false'
+      runAfter:
+        - checkov-dockerfile-scanner
+        - checkov-kubernetes-scanner
+      taskRef:
+        kind: ClusterTask
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: source
+        - name: dockerconfig
+          workspace: docker-config
     - name: sonarqube-analysis
       params:
         - name: MAVEN_IMAGE
           value: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
+            registry.redhat.io/ubi8/openjdk-17@sha256:923b18a62d892ec23b6bbf714ecb237a0a0fa3cd225fbf89d39966dd8d421c72
         - name: GOALS
           value:
             - 'sonar:sonar'
-            - '-Dsonar.projectKey=Aziz-project'
-            - '-Dsonar.projectName=''Aziz-project'''
+            - '-Dsonar.projectKey=Amdouni-Med-Aziz-Ez-Learning'
+            - '-Dsonar.projectName=''Amdouni-Med-Aziz-Ez-Learning'''
             - >-
               -Dsonar.host.url=http://ec2-54-195-35-218.eu-west-1.compute.amazonaws.com:9000
-            - '-Dsonar.token=sqp_a7267a3a3ef66483ac6f5f14f38c732424474cea'
+            - '-Dsonar.token=sqp_106f57f5a249dcafebbd2a7ade942e68a3e663d7'
         - name: MAVEN_MIRROR_URL
           value: ''
         - name: SERVER_USER
@@ -353,8 +414,8 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - pmd-reporting
-        - cpd-reporting
+        - cpd-copy-paste-detector
+        - pmd-program-mistake-detector
       taskRef:
         kind: ClusterTask
         name: maven
@@ -363,26 +424,31 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
-    - name: gitleaks
+    - name: checkov-dockerfile-scanner
       params:
         - name: repo_path
           value: ez-learning
-        - name: config_file_url
-          value: >-
-            https://github.com/azamd/ez-learning/blob/master/gitleaks/.pre-commit-config.yaml
-        - name: config_file_path
-          value: gitleaks/.pre-commit-config.yaml
-        - name: output_format
-          value: json
-        - name: report_output_path
-          value: ez-learning/gitleaks/gitleaks-reports.json
-        - name: args
-          value: []
+        - name: CONTEXT_DIR
+          value: .
       runAfter:
-        - git-clone
+        - sonarqube-analysis
       taskRef:
         kind: Task
-        name: git-leaks
+        name: checkov-dockerfile-scanner
+      workspaces:
+        - name: source
+          workspace: source
+    - name: checkov-kubernetes-scanner
+      params:
+        - name: repo_path
+          value: ez-learning
+        - name: CONTEXT_DIR
+          value: .
+      runAfter:
+        - sonarqube-analysis
+      taskRef:
+        kind: Task
+        name: checkov-kubernetes-scanner
       workspaces:
         - name: source
           workspace: source
@@ -390,7 +456,7 @@ spec:
       params:
         - name: MAVEN_IMAGE
           value: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
+            registry.redhat.io/ubi8/openjdk-17@sha256:923b18a62d892ec23b6bbf714ecb237a0a0fa3cd225fbf89d39966dd8d421c72
         - name: GOALS
           value:
             - 'jmeter:jmeter'
@@ -415,7 +481,7 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - selenium-e2e-testing
+        - deploy-on-ocp
       taskRef:
         kind: ClusterTask
         name: maven
@@ -424,29 +490,6 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
-    - name: image-build-and-push
-      params:
-        - name: IMAGE
-          value: 'amdaziz/ez-learning:latest'
-        - name: DOCKERFILE
-          value: ./Dockerfile
-        - name: CONTEXT
-          value: ./
-        - name: EXTRA_ARGS
-          value: []
-        - name: BUILDER_IMAGE
-          value: >-
-            gcr.io/kaniko-project/executor:v1.5.1@sha256:c6166717f7fe0b7da44908c986137ecfeab21f31ec3992f6e128fff8a94be8a5
-      runAfter:
-        - checkov-scanner
-      taskRef:
-        kind: Task
-        name: kaniko
-      workspaces:
-        - name: source
-          workspace: source
-        - name: dockerconfig
-          workspace: docker-config
     - name: selenium-e2e-testing
       params:
         - name: MAVEN_IMAGE
@@ -455,7 +498,7 @@ spec:
         - name: GOALS
           value:
             - test
-            - '-Dtest="E2eAutomatedTest"'
+            - '-Dtest=E2eAutomatedTest'
         - name: MAVEN_MIRROR_URL
           value: ''
         - name: SERVER_USER
@@ -477,7 +520,7 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - deploy
+        - deploy-on-ocp
       taskRef:
         kind: ClusterTask
         name: maven
