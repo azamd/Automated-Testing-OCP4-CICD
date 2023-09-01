@@ -1,0 +1,57 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ez-learning-git
+  namespace: amd-med-aziz-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ez-learning-git
+  template:
+    metadata:
+      labels:
+        app: ez-learning-git
+        deployment: ez-learning-git
+    spec:
+      containers:
+        - name: ez-learning-git
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/amd-med-aziz-dev/ez-learning-git@sha256:4ccc597423ad3979812e78d13ba1bfa24ef7c44df4d8dc549866d6e2f14e33ea
+          env:
+            - name: APP_PROFILE
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: APP_PROFILE
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: MYSQL_DATABASE
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: MYSQL_HOST
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_PORT_NUMBER
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: MYSQL_PORT_NUMBER
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: ez-learning-env-cm
+                  key: MYSQL_USER
+                  
