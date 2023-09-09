@@ -1,0 +1,44 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  creationTimestamp: '2023-09-04T13:12:42Z'
+  generation: 4
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:description': {}
+          'f:params': {}
+          'f:steps': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-09-07T12:37:30Z'
+  name: jmeter-load-tests
+  namespace: amd-med-aziz-dev
+  resourceVersion: '3023434837'
+  uid: fb16f7ab-ae97-423b-84b4-4024db3c7702
+spec:
+  description: This task makes it possible to run jmeter tasks.
+  params:
+    - default: Ez-Learning-Threads.jmx
+      description: The JMeter test plan JMX file to execute.
+      name: jmeter-test-plan
+      type: string
+  steps:
+    - command:
+        - jmeter
+        - '-n'
+        - '-t'
+        - $(workspaces.source.path)/src/test/jmeter/$(params.jmeter-test-plan)
+      image: 'docker.io/justb4/jmeter:latest'
+      name: run-jmeter
+      resources: {}
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - description: >-
+        This workspace references the project that contains the JMeter Test Plan
+        JMX file.
+      name: source

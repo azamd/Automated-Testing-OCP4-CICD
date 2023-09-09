@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   creationTimestamp: '2023-08-20T11:26:45Z'
-  generation: 27
+  generation: 34
   managedFields:
     - apiVersion: tekton.dev/v1beta1
       fieldsType: FieldsV1
@@ -16,10 +16,10 @@ metadata:
           'f:workspaces': {}
       manager: Mozilla
       operation: Update
-      time: '2023-09-01T10:47:03Z'
+      time: '2023-09-04T13:20:14Z'
   name: ci-cd
   namespace: amd-med-aziz-dev
-  resourceVersion: '3002904259'
+  resourceVersion: '3013334819'
   uid: 2b5f8420-c9d6-457a-a4a9-f1bf5a0d2f45
 spec:
   tasks:
@@ -133,7 +133,6 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - checkstyle
         - unit-testing
       taskRef:
         kind: ClusterTask
@@ -172,7 +171,6 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - checkstyle
         - unit-testing
       taskRef:
         kind: ClusterTask
@@ -209,82 +207,6 @@ spec:
       workspaces:
         - name: source-dir
           workspace: source
-    - name: checkstyle
-      params:
-        - name: MAVEN_IMAGE
-          value: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
-        - name: GOALS
-          value:
-            - 'checkstyle:check'
-        - name: MAVEN_MIRROR_URL
-          value: ''
-        - name: SERVER_USER
-          value: ''
-        - name: SERVER_PASSWORD
-          value: ''
-        - name: PROXY_USER
-          value: ''
-        - name: PROXY_PASSWORD
-          value: ''
-        - name: PROXY_PORT
-          value: ''
-        - name: PROXY_HOST
-          value: ''
-        - name: PROXY_NON_PROXY_HOSTS
-          value: ''
-        - name: PROXY_PROTOCOL
-          value: http
-        - name: CONTEXT_DIR
-          value: .
-      runAfter:
-        - app-build
-      taskRef:
-        kind: ClusterTask
-        name: maven
-      workspaces:
-        - name: source
-          workspace: source
-        - name: maven-settings
-          workspace: maven-settings
-    - name: unit-testing
-      params:
-        - name: MAVEN_IMAGE
-          value: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
-        - name: GOALS
-          value:
-            - test
-        - name: MAVEN_MIRROR_URL
-          value: ''
-        - name: SERVER_USER
-          value: ''
-        - name: SERVER_PASSWORD
-          value: ''
-        - name: PROXY_USER
-          value: ''
-        - name: PROXY_PASSWORD
-          value: ''
-        - name: PROXY_PORT
-          value: ''
-        - name: PROXY_HOST
-          value: ''
-        - name: PROXY_NON_PROXY_HOSTS
-          value: ''
-        - name: PROXY_PROTOCOL
-          value: http
-        - name: CONTEXT_DIR
-          value: .
-      runAfter:
-        - app-build
-      taskRef:
-        kind: ClusterTask
-        name: maven
-      workspaces:
-        - name: source
-          workspace: source
-        - name: maven-settings
-          workspace: maven-settings
     - name: owasp-dependency-check
       params:
         - name: MAVEN_IMAGE
@@ -452,14 +374,14 @@ spec:
       workspaces:
         - name: source
           workspace: source
-    - name: jmeter-load-testing
+    - name: checkstyle
       params:
         - name: MAVEN_IMAGE
           value: >-
             registry.redhat.io/ubi8/openjdk-17@sha256:923b18a62d892ec23b6bbf714ecb237a0a0fa3cd225fbf89d39966dd8d421c72
         - name: GOALS
           value:
-            - 'jmeter:jmeter'
+            - 'checkstyle:check'
         - name: MAVEN_MIRROR_URL
           value: ''
         - name: SERVER_USER
@@ -481,7 +403,7 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - deploy-on-ocp
+        - app-build
       taskRef:
         kind: ClusterTask
         name: maven
@@ -490,7 +412,7 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
-    - name: selenium-e2e-testing
+    - name: unit-testing
       params:
         - name: MAVEN_IMAGE
           value: >-
@@ -498,7 +420,6 @@ spec:
         - name: GOALS
           value:
             - test
-            - '-Dtest=E2eAutomatedTest'
         - name: MAVEN_MIRROR_URL
           value: ''
         - name: SERVER_USER
@@ -520,7 +441,8 @@ spec:
         - name: CONTEXT_DIR
           value: .
       runAfter:
-        - deploy-on-ocp
+        - checkstyle
+        - spotbugs
       taskRef:
         kind: ClusterTask
         name: maven
@@ -529,6 +451,56 @@ spec:
           workspace: source
         - name: maven-settings
           workspace: maven-settings
+    - name: spotbugs
+      params:
+        - name: MAVEN_IMAGE
+          value: >-
+            registry.redhat.io/ubi8/openjdk-17@sha256:923b18a62d892ec23b6bbf714ecb237a0a0fa3cd225fbf89d39966dd8d421c72
+        - name: GOALS
+          value:
+            - 'spotbugs:check'
+        - name: MAVEN_MIRROR_URL
+          value: ''
+        - name: SERVER_USER
+          value: ''
+        - name: SERVER_PASSWORD
+          value: ''
+        - name: PROXY_USER
+          value: ''
+        - name: PROXY_PASSWORD
+          value: ''
+        - name: PROXY_PORT
+          value: ''
+        - name: PROXY_HOST
+          value: ''
+        - name: PROXY_NON_PROXY_HOSTS
+          value: ''
+        - name: PROXY_PROTOCOL
+          value: http
+        - name: CONTEXT_DIR
+          value: .
+      runAfter:
+        - app-build
+      taskRef:
+        kind: Task
+        name: spotbugs-detect
+      workspaces:
+        - name: source
+          workspace: source
+        - name: maven-settings
+          workspace: maven-settings
+    - name: jmeter-load-tests
+      params:
+        - name: jmeter-test-plan
+          value: Ez-Learning-Threads.jmx
+      runAfter:
+        - deploy-on-ocp
+      taskRef:
+        kind: Task
+        name: jmeter-load-tests
+      workspaces:
+        - name: source
+          workspace: source
   workspaces:
     - name: source
     - name: maven-settings
