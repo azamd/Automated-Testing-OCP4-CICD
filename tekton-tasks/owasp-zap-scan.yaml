@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  creationTimestamp: '2023-09-16T11:53:06Z'
+  generation: 4
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:steps': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-09-16T13:14:32Z'
+  name: owasp-zap-api-scan
+  namespace: amd-med-aziz-dev
+  resourceVersion: '3053672501'
+  uid: a937e42e-b926-429c-ba6a-4eb0cb3ca36e
+spec:
+  steps:
+    - args:
+        - '-t'
+        - >-
+          https://ez-learning-git-amd-med-aziz-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com
+        - '-f'
+        - openapi
+      command:
+        - zap-api-scan.py
+      image: 'owasp/zap2docker-weekly:latest'
+      name: zap-api-security-scan
+      resources: {}

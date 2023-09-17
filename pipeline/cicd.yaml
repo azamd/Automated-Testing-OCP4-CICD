@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   creationTimestamp: '2023-08-20T11:26:45Z'
-  generation: 34
+  generation: 40
   managedFields:
     - apiVersion: tekton.dev/v1beta1
       fieldsType: FieldsV1
@@ -16,10 +16,10 @@ metadata:
           'f:workspaces': {}
       manager: Mozilla
       operation: Update
-      time: '2023-09-04T13:20:14Z'
+      time: '2023-09-16T11:56:49Z'
   name: ci-cd
   namespace: amd-med-aziz-dev
-  resourceVersion: '3013334819'
+  resourceVersion: '3053483906'
   uid: 2b5f8420-c9d6-457a-a4a9-f1bf5a0d2f45
 spec:
   tasks:
@@ -207,44 +207,6 @@ spec:
       workspaces:
         - name: source-dir
           workspace: source
-    - name: owasp-dependency-check
-      params:
-        - name: MAVEN_IMAGE
-          value: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
-        - name: GOALS
-          value:
-            - 'dependency-check:check'
-        - name: MAVEN_MIRROR_URL
-          value: ''
-        - name: SERVER_USER
-          value: ''
-        - name: SERVER_PASSWORD
-          value: ''
-        - name: PROXY_USER
-          value: ''
-        - name: PROXY_PASSWORD
-          value: ''
-        - name: PROXY_PORT
-          value: ''
-        - name: PROXY_HOST
-          value: ''
-        - name: PROXY_NON_PROXY_HOSTS
-          value: ''
-        - name: PROXY_PROTOCOL
-          value: http
-        - name: CONTEXT_DIR
-          value: .
-      runAfter:
-        - gitleaks
-      taskRef:
-        kind: ClusterTask
-        name: maven
-      workspaces:
-        - name: source
-          workspace: source
-        - name: maven-settings
-          workspace: maven-settings
     - name: gitleaks
       params:
         - name: repo_path
@@ -501,6 +463,62 @@ spec:
       workspaces:
         - name: source
           workspace: source
+    - name: taurus-performance-tests
+      params:
+        - name: jmeter-test-plan
+          value: Ez-Learning-Threads.jmx
+      runAfter:
+        - jmeter-load-tests
+      taskRef:
+        kind: Task
+        name: taurus-performance-test
+      workspaces:
+        - name: source
+          workspace: source
+    - name: owasp-dependency-check
+      params:
+        - name: MAVEN_IMAGE
+          value: >-
+            registry.redhat.io/ubi8/openjdk-17@sha256:923b18a62d892ec23b6bbf714ecb237a0a0fa3cd225fbf89d39966dd8d421c72
+        - name: GOALS
+          value:
+            - 'dependency-check:check'
+        - name: MAVEN_MIRROR_URL
+          value: ''
+        - name: SERVER_USER
+          value: ''
+        - name: SERVER_PASSWORD
+          value: ''
+        - name: PROXY_USER
+          value: ''
+        - name: PROXY_PASSWORD
+          value: ''
+        - name: PROXY_PORT
+          value: ''
+        - name: PROXY_HOST
+          value: ''
+        - name: PROXY_NON_PROXY_HOSTS
+          value: ''
+        - name: PROXY_PROTOCOL
+          value: http
+        - name: CONTEXT_DIR
+          value: .
+      runAfter:
+        - gitleaks
+      taskRef:
+        kind: Task
+        name: owasp-dep-check
+      workspaces:
+        - name: source
+          workspace: source
+        - name: maven-settings
+          workspace: maven-settings
+    - name: owasp-zap-api-scan
+      runAfter:
+        - taurus-performance-tests
+      taskRef:
+        kind: Task
+        name: owasp-zap-api-scan
   workspaces:
     - name: source
     - name: maven-settings

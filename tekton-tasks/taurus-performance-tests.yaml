@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  creationTimestamp: '2023-09-11T03:36:02Z'
+  generation: 1
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:params': {}
+          'f:steps': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-09-11T03:36:02Z'
+  name: taurus-performance-test
+  namespace: amd-med-aziz-dev
+  resourceVersion: '3035535935'
+  uid: dcf5ce78-c812-4116-b7c1-2e10b7649235
+spec:
+  params:
+    - default: Ez-Learning-Threads.jmx
+      description: The JMeter test plan JMX file to execute.
+      name: jmeter-test-plan
+      type: string
+  steps:
+    - command:
+        - bzt
+        - $(workspaces.source.path)/src/test/jmeter/$(params.jmeter-test-plan)
+      image: 'docker.io/blazemeter/taurus:latest'
+      name: run-blazemeter-taurus
+      resources: {}
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - description: >-
+        This workspace references the project that contains the JMeter Test Plan
+        JMX file.
+      name: source
