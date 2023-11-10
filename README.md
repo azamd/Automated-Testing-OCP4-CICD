@@ -100,8 +100,12 @@ For a better understanding here's a detailed screenshot of task n°4:
 
 -> Notice the addition of the required workspaces: source and maven-settings (PVCs [PersistentVolumeClaim] are needed for your workspaces).
 
-# USEFUL SCREENSHOTS:
+# Deployment Strategies:
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/7031ecc9-5240-4cb7-a064-60df5ab96ba5)
+- RollingUpdate: 2 pods for the application deployment, this deployment strategy enables a partial update in our app deployment and ensures no downtime and high availability.
+- Recreate: a full replacement from the old to the new version of our DB pod.
 
+# USEFUL SCREENSHOTS:
 -Unit Tests:
 ![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/d28e98d6-6811-4c35-bcf6-0410f421648b)
 Example:
