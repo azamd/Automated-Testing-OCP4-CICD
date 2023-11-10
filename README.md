@@ -31,13 +31,18 @@ the main cluster task implemented in this pipeline is Maven Cluster Task provide
 - Apache JMeter: an open-source performance testing tool, primarily used for load testing, performance testing, and functional testing of web apps, web services, databases, and other software systems.
 - Taurus: combined with Apache JMeter, Taurus outputs a fully detailed report on the application's endpoints and their respective status.
 - OWASP ZAP: a DAST tool that simulates different types of attacks and outputs full reports on the application's security vulnerabilities by scanning its API endpoints and identifying weaknesses like SQL Injection, XSS, and CSRF.    
-# Pipeline Description:
-- Pipeline overview:
+# Pipeline Architecture:
+- Pipeline Architectural Overview:
 
-![Screenshot from 2023-08-15 12-31-13](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/605d58f9-2ce2-4fd1-a538-ed9317d8f990)
-![Screenshot from 2023-08-15 12-31-40](https://github.com/azamd/Automated-Testing-OCP4-CICD/assets/47691398/880c29a7-c1ae-4195-b6f7-c45e0a1e9412)
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/4c0ef561-459b-4c31-ba9e-41efa795f374)
 
-- In the following section, I elaborate with a comprehensive explanation of each task:
+
+-> The usage of the following Kubernetes objects for the following purposes:
+- PVC (PersistentVolumeClaim): manages storage resources in an abstracted, portable, and scalable manner.
+- CM (ConfigMap): in this context, the usage of the CM for environment variables storage and facilitating the injecting of new values to our environment variables, like switching the app's profile from: Dev to Prod mode.
+- Secret: in this context, the usage of a secret to store our user credentials for security purposes and needed for pushing our app image to our container image registry (DockerHub).
+
+-> In the following section, I elaborate with a comprehensive explanation of each task:
 
 1- git-clone: the starting task that links the application source code with the pipeline by cloning its Git remote repository.
 
@@ -78,7 +83,8 @@ PS: "docker-config" is the name of the secret that I've chosen you can pick your
 14- Taurus performance testing: this task alongside the previously executed JMeter task will report the respective status of our application API endpoints (this report is the visual interpretation of our JMeter JMX testing scenario).
 
 15- OWASP-ZAP: this task will launch a simulation of passive attacks through OWASP ZAP to help identify the application's security weaknesses, such as SQL Injection, XSS, and CSRF with full reports.
-IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as workspaces, and its context (default: "."). 
+IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as workspaces, and its context (default: ".").
+
 
 For a better understanding here's a detailed screenshot of task n°4:
 
