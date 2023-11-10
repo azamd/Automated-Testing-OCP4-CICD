@@ -30,7 +30,8 @@ the main cluster task implemented in this pipeline is Maven Cluster Task provide
 - Grype: an open-source vulnerability scanner for container images and filesystems, it identifies known vulnerabilities and potential security issues in container images and their components.
 - Apache JMeter: an open-source performance testing tool, primarily used for load testing, performance testing, and functional testing of web apps, web services, databases, and other software systems.
 - Taurus: combined with Apache JMeter, Taurus outputs a fully detailed report on the application's endpoints and their respective status.
-- OWASP ZAP: a DAST tool that simulates different types of attacks and outputs full reports on the application's security vulnerabilities by scanning its API endpoints and identifying weaknesses like SQL Injection, XSS, and CSRF.    
+- OWASP ZAP: a DAST tool that simulates different types of attacks and outputs full reports on the application's security vulnerabilities by scanning its API endpoints and identifying weaknesses like SQL Injection, XSS, and CSRF.
+  
 # Pipeline Architecture:
 - Pipeline Architectural Overview:
 
@@ -83,6 +84,7 @@ PS: "docker-config" is the name of the secret that I've chosen you can pick your
 14- Taurus performance testing: this task alongside the previously executed JMeter task will report the respective status of our application API endpoints (this report is the visual interpretation of our JMeter JMX testing scenario).
 
 15- OWASP-ZAP: this task will launch a simulation of passive attacks through OWASP ZAP to help identify the application's security weaknesses, such as SQL Injection, XSS, and CSRF with full reports.
+
 IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as workspaces, and its context (default: ".").
 
 
@@ -97,3 +99,32 @@ For a better understanding here's a detailed screenshot of task n°4:
 -> Notice "." as the default value of The context directory within the repository for sources on which we want to execute maven goals.
 
 -> Notice the addition of the required workspaces: source and maven-settings (PVCs [PersistentVolumeClaim] are needed for your workspaces).
+
+# USEFUL SCREENSHOTS:
+
+-Unit Tests:
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/d28e98d6-6811-4c35-bcf6-0410f421648b)
+Example:
+![Screenshot from 2023-11-10 16-39-21-1](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/2933e5b8-3d08-44c2-8201-e9c8290cd505)
+
+
+-SCA (OWASP-Dependency-Check HTML Report):
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/b13056ff-a6b9-40cb-a1b0-497d64f109dd)
+
+-SAST (SonarQube Display):
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/b797125c-c3d8-4785-a2bb-b70ed4bc336b)
+
+-IaC Scanning (Checkov report):
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/a0b559f8-ee9a-458f-97b9-639b9c040247)
+
+-Container Scanning (Anchore Grype report):
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/4b523321-5f35-4d4b-a56d-5eb95358304e)
+
+-Performance Testing (Apache JMeter and Taurus reports):
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/d0e82eec-5809-47cb-a642-9499596ca90f)
+
+-DAST (OWASP ZAP report):
+![image](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/6c6eb3aa-d420-44b2-bbeb-8562c76426b8)
+
+
+
