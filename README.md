@@ -14,7 +14,7 @@ the main cluster task implemented in this pipeline is Maven Cluster Task provide
 
 # Used technologies and tools:
 
-![Screenshot from 2023-08-16 11-21-19](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/5f0d73da-f018-477a-b907-c3eeb331487a)
+![Screenshot from 2023-11-10 15-59-28-1](https://github.com/azamd/OCP4-TKN-CICD/assets/47691398/2fecd096-a1b8-4083-9d8e-d44d54c3e26f)
 
 - Red Hat OpenShift 4: the main platform where I've implemented the CI/CD pipeline and deployed the application.
 - Tekton: a powerful yet flexible Kubernetes-native open-source framework for creating continuous integration and delivery (CI/CD) systems, OCP4 uses Tekton to build CI/CD pipelines.
@@ -26,11 +26,11 @@ the main cluster task implemented in this pipeline is Maven Cluster Task provide
 - PMD/CPD: detect duplicated code blocks.
 - SonarQube: an open-source platform for continuous inspection of code quality to perform automatic reviews with static analysis of code to detect bugs and code smells.
 - Checkov: a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages.
-- Kaniko: an open-source tool developed by Google that enables users to build container images from a Dockerfile, inside a container or Kubernetes cluster, without requiring a Docker daemon.
+- Buildah: an open-source tool developed by Google that enables users to build container images from a Dockerfile, inside a container or Kubernetes cluster, without requiring a Docker daemon.
 - Grype: an open-source vulnerability scanner for container images and filesystems, it identifies known vulnerabilities and potential security issues in container images and their components.
-- JMeter: an open-source performance testing tool, primarily used for load testing, performance testing, and functional testing of web apps, web services, databases, and other software systems.
-- Selenium WebDriver: a powerful tool for automating web interactions and testing, making it easier to ensure the quality and functionality of web applications across different browsers and platforms.
-  
+- Apache JMeter: an open-source performance testing tool, primarily used for load testing, performance testing, and functional testing of web apps, web services, databases, and other software systems.
+- Taurus: combined with Apache JMeter, Taurus outputs a fully detailed report on the application's endpoints and their respective status.
+- OWASP ZAP: a DAST tool that simulates different types of attacks and outputs full reports on the application's security vulnerabilities by scanning its API endpoints and identifying weaknesses like SQL Injection, XSS, and CSRF.    
 # Pipeline Description:
 - Pipeline overview:
 
@@ -75,8 +75,9 @@ PS: "docker-config" is the name of the secret that I've chosen you can pick your
 
 13- jmeter-load-testing: this task launches a series of pre-defined JMeter tests (HTTP requests) for analyzing and measuring the overall performance of the pre-deployed application.
 
-14- selenium-e2e-testing: this task uses Selenium to launch automated end-to-end tests on Google Chrome browser to evaluate the execution/user experience delivered by the application.
+14- Taurus performance testing: this task alongside the previously executed JMeter task will report the respective status of our application API endpoints (this report is the visual interpretation of our JMeter JMX testing scenario).
 
+15- OWASP-ZAP: this task will launch a simulation of passive attacks through OWASP ZAP to help identify the application's security weaknesses, such as SQL Injection, XSS, and CSRF with full reports.
 IMPORTANT NOTE: the maven cluster tasks used in this pipeline are: 3, 4, 5, 6, 7(both), 8, 13, and 14. each maven cluster task is an execution of a maven command with specific goals (example: "mvn clean package -DskipTests" for task n°4), it is also required to specify the project source directory and maven-settings as workspaces, and its context (default: "."). 
 
 For a better understanding here's a detailed screenshot of task n°4:
